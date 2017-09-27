@@ -1,0 +1,13 @@
+© Simon Marcus Catterall, Syracuse University 
+
+Reference : https://arxiv.org/abs/hep-lat/9405026 
+
+------------------------------------------------------------------------ 
+Code for simulation of quantum gravity using dynamical triangulations
+Works for any dimension D . Topology is S^D
+Action contains node coupling (Newton constant K0) and simplex coupling
+(cosmological constant KD).
+Volume constrained to lie within DV of target volume VOL.
+grav.h contains most parameters and function and class definitions.
+other data read from file ''param''
+Compile with ''make''
