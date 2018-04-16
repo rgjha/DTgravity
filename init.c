@@ -10,6 +10,15 @@ for(i=0;i<INCVOL;i++){
 len_dist[i]=0.0;
 }
 
+for(i=0;i<STEPS;i++){
+prob[i]=0.0;
+dprob[i]=0.0;
+}
+
+for(i=0;i<VOL;i++){
+len[i]=0.0;
+}
+
 for(i=0;i<DPLUS;i++)
 {
 try_subsimplex[i]=0;

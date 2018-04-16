@@ -1,5 +1,6 @@
-4.0 0.0
-10 10 10 10 0 10 115555 0
+0.0 0.0 0.01
+1000 1000 10 200 0 1000 1155555 0
 
-vertex coupling, curvaturesq coupling
+
+vertex coupling, order coupling, fermion mass
 thermalise, sweeps, gap, tune_coupling, readin, block, seed, dump_start

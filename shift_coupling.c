@@ -9,7 +9,7 @@ dum=((double)vol_monitor)/((double)num_monitor);
 
 kappa_d=kappa_d+(2.0/(DV*DV))*(dum-VOL);
 
-printf("\nNew coupling is %f ",kappa_d);
+printf("New coupling is %f \n",kappa_d);
 fflush(stdout);
 
 vol_monitor=0;

@@ -2,9 +2,9 @@
 /* finds addresses of all simplices which share a given subsimplex */
 
 void find_simplices(PSIMPLEX p, int  a[DPLUS], int  sub, 
-                    PSIMPLEX s_near[VOL], int  *number){
+                    PSIMPLEX s_near[INCVOL], int  *number){
 
-PSIMPLEX array1[VOL],array2[VOL],near[DPLUS];
+PSIMPLEX array1[INCVOL],array2[INCVOL],near[DPLUS];
 int i,j,k,num1,num2;
 
 

@@ -19,7 +19,7 @@ not_seen[i]=1;
 for(i=0;i<simplex_number;i++){
 temp=simplex_point[i];
 
-for(j=0;j<D;j++){
+for(j=0;j<DPLUS;j++){
 if(not_seen[temp->vertex[j]]){
 a[0]=temp->vertex[j];
 find_simplices(temp,a,1,near,&number);

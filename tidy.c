@@ -15,7 +15,8 @@ add=0;
 
 if(pointer_number>BIGVOL){printf("\nError -- need to increase BIGVOL");exit(1);}
 
-max_point+=pointer_number;
+if(pointer_number>max_point) max_point=pointer_number;
+//max_point+=pointer_number;
 
 for(i=0;i<pointer_number;i++)
 if(simplex_point[i]!=NULL)

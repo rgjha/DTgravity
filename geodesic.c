@@ -3,11 +3,11 @@
 /* distances from given simplex to other simplices labelled by their */
 /* position in simplex_point[] i.e the value of their member label */
 
+
 void geodesic(PSIMPLEX p, int  distance[INCVOL])
 {
-PSIMPLEX array1[INCVOL],array2[INCVOL],examine[INCVOL];
 int  number1,number2,search,i,j,dist;
-
+PSIMPLEX array1[INCVOL],array2[INCVOL], examine[INCVOL];
 
 array1[0]=p;
 number1=1;
@@ -38,14 +38,19 @@ search++;
 for(i=0;i<number2;i++)
 array1[i]=array2[i];
 
+//printf("number2 is %d\n",number2);
+fflush(stdout);
+
 number1=number2;
 
 }
 
+//printf("search is %d simplex_number is %d\n",search, simplex_number);
+
 /* finally set all flags back to NO */
 
-for(i=0;i<search;i++)
-examine[i]->flag=NO;
+for(i=0;i<search;i++){
+examine[i]->flag=NO;}
 
 return;
 }

@@ -74,7 +74,7 @@ temp++;
 if(temp!=(DPLUS)){printf("\nError in good_subsimplex");exit(1);}
 
 /* now loop over all possible faces constucted to include this subsimplex */
-/* by selecting d-i-1 out of the d-i b indices */
+/* by selecting d-i-1 out of the d-i remaining indices */
 
 for(i=0;i<DPLUS;i++)
 a[i]=p->vertex[aind[i]];

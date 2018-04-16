@@ -11,6 +11,8 @@ real_node+=(double)node_number;
 
 total_action=-kappa_0*node_number;
 
+tidy();
+
 dum=0.0;
 dum=mean_dist();
 average_distance+=dum;
@@ -27,6 +29,12 @@ io_config(number_measure);
 singular_vertex();
 calls=0;
 }
+
+orient();
+
+//testorient();
+
+kdoperator();
 
 return;
 }
