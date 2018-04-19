@@ -11,13 +11,10 @@ printf("\nResults :");
 real_simplex=real_simplex/number_measure;
 real_node=real_node/number_measure;
 average_distance=average_distance/number_measure;
-//max_point=max_point/(SWEEPS);
 
 dummy=0.0;
 for(i=0;i<DPLUS;i++)
 dummy+=(double)legal_subsimplex[i];
-//printf("Total number of legal moves %lg\n",dummy);
-//printf("Raw manifold check %lg\n",manifold_check);
 manifold_check/=dummy;
 manifold_check*=VOL;
 

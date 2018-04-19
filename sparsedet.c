@@ -155,7 +155,7 @@ options.SymmetricMode = YES;
 StatInit(&stat);
 dgssv(&options, &A, perm_c, perm_r, &LO, &U, &B, &stat, &info);
 
-if(info!=0){(void)printf("error in super LU\n");}
+if(info!=0){(void)printf("Error in super LU\n");}
 
 // Check solution
     if(DEBUG){double *b;
@@ -210,7 +210,7 @@ if(info!=0){(void)printf("error in super LU\n");}
          }
     
     printf("------------------------------------ \n");
-    (void)printf("super LU node det is %lg\n",det);
+    (void)printf("Super LU node det is %lg\n",det);
     double DETERM = find_det(test,node_number);
     printf("LAPACK node det is %.8g \n", DETERM);
     printf("------------------------------------ \n");
@@ -229,8 +229,6 @@ StatFree(&stat);
     
     
     (void)fprintf(f,"%lg ",det);
-    
-    
     
     // Now construct Laplacian for simplex
     
@@ -283,7 +281,7 @@ StatFree(&stat);
     
      (void)printf("Number of nonzeroes in sparse Simplex Laplacian %d\n",nnz);fflush(stdout);
     
-    // remalloc with exactly correct number of nonzeroes
+    // Remalloc with exactly correct number of nonzeroes
      lap=vector(0,nnz-1);
      jlap=ivector(0,nnz-1);
      ilap=ivector(0,n);
@@ -320,16 +318,6 @@ StatFree(&stat);
     }
     printf("Reconstructed simplex Laplacian\n");
     
-  
-  /*
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            (void)printf("%lg ",test[i][j]);}
-        (void)printf("\n");
-    }
-    
-    free_matrix(test,0,n-1,0,n-1);
-   */ 
     dCreate_CompCol_Matrix(&A,n,n,nnz,lap,jlap,ilap,SLU_NC,SLU_D,SLU_GE);
     nrhs = 1;
     
@@ -340,12 +328,11 @@ StatFree(&stat);
     if ( !(perm_c = intMalloc(n)) ) ABORT("Malloc fails for perm_c[].");
     
     set_default_options(&options);
-    //options.ColPerm = NATURAL;
     options.SymmetricMode = YES;
     StatInit(&stat);
     dgssv(&options, &A, perm_c, perm_r, &LO, &U, &B, &stat, &info);
     
-    if(info!=0){(void)printf("error in super LU\n");}
+    if(info!=0){(void)printf("Error in super LU\n");}
 
     // Check solution
     if(DEBUG){double *b;
@@ -368,22 +355,15 @@ StatFree(&stat);
         }
     }
     
-    // for(i=0;i<m;i++){
-    // (void)printf("Ax[%d]=%lg ",i,b[i]);}
-    
-    //(void)printf("\n");
-    
     det=0.0;
     
     Lstore = (SCformat *)LO.Store;
     Lval = (double *)Lstore->nzval;
     nsupers = Lstore->nsuper + 1;
     
-    //Get the diagonal entries of the U matrix
-    //Allocate store for the entries
     if ( !(diagU = SUPERLU_MALLOC( m * sizeof(SuperMatrix) )) )
         ABORT("Malloc fails for diagU[].");
-    //Loop over the number of super diagonal terms(?)
+    
     for(k2=0; k2< nsupers; ++k2)
     {
         fsupc = L_FST_SUPC(k2);
@@ -398,10 +378,8 @@ StatFree(&stat);
             luptr += nsupr + 1;
         }
     }
-    
-    //Now multiply all the diagonal terms together to get the determinant
+
     for(int i=0;i<n;i++){
-        // (void)printf("diagU[%d] is %lg\n",i,diagU[i]);
         det=det+log(fabs(diagU[i]));
     }
     
@@ -411,7 +389,7 @@ StatFree(&stat);
     printf("LAPACK simplex det is %.8g \n", DETERM);
     printf("------------------------------------ \n");
     
-    /* Free un-wanted storage */
+    /* Free storage */
     SUPERLU_FREE(diagU);
     SUPERLU_FREE (rhs);
     SUPERLU_FREE (perm_r);
@@ -423,9 +401,7 @@ StatFree(&stat);
     Destroy_CompCol_Matrix(&U);
     StatFree(&stat);
     
-    
     (void)fprintf(f,"%lg\n",det);
-
     fflush(f);
 
 }

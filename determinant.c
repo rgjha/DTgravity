@@ -28,8 +28,8 @@ dgetrf(&n, &n, store, &n, ipiv, &stat);
 // store has input & output 
  
 det = 0;
-for (p = 0; p < n; p++) {
-det=det+log(fabs(store[p*(n+1)]));
+for (int i = 0; i < n; i++) {
+det=det+log(fabs(store[i*(n+1)]));
 }
 return det;    
 }

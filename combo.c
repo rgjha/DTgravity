@@ -1,4 +1,3 @@
-
 #include "grav.h"
 /* routine takes n element vector a[] and returns n-1 element in b[] */
 /* thus n combinations possible selected according to count */
