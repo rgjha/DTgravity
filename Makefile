@@ -1,6 +1,6 @@
 # DT gravity makefile
 #
-CFLAGS = -O -I/Users/smcatter/Dropbox/Documents/CODE/SuperLU/SuperLU_5.2.0/SRC 
+CFLAGS = -O -I/Users/RG/Desktop/SuperLU_5.2.0/SRC
 CC = gcc
 
 OBJ = find_simplices.o print_out.o\
@@ -16,7 +16,7 @@ common_simplex.o shift_coupling.o\
 geodesic.o cleanup.o\
 testorient.o ludcmp.o\
 DminusOne.o DminusTwo.o DminusThree.o DminusFour.o\
-good_subsimplex.o sparsedet.o\
+good_subsimplex.o sparsedet.o determinant.o\
 header.o sum_face.o\
 orient.o sortsimplex.o\
 init.o tidy.o calcdet.o\
@@ -31,8 +31,8 @@ pop.o read_param.o\
 block_obs.o io_config.o singular_vertex.o\
 
 grav: $(OBJ) 
-	$(CC) $(CFLAGS) -o grav $(OBJ) -L/Users/smcatter/Dropbox/Documents/CODE/SuperLU/SuperLU_5.2.0/lib -lm -lblas -lsuperlu_5.1
-
+	$(CC) $(CFLAGS) -o grav $(OBJ) -L/Users/RG/Desktop/SuperLU_5.2.0/lib -lm -lblas -llapack -lsuperlu_5.1
+ 
 find_simplices.o: grav.h
 print_out.o: grav.h
 gasdev.o: grav.h
@@ -44,6 +44,7 @@ DminusFour.o: grav.h
 boundary.o: grav.h
 sparsedet.o: grav.h
 calcdet.o: grav.h
+determinant.o: grav.h
 kdoperator.o: grav.h
 orient.o: grav.h
 laplacian.o: grav.h

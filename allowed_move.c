@@ -15,7 +15,7 @@ PSIMPLEX array1[VOL],array2[VOL],dum[DPLUS],examine[VOL];
 int  i,j,number1,number2,search,b[DPLUS];
 enum LOGIC good;
 
-/* need to teminate when either 1. see opposing vertex a[DPLUS] in some */
+/* need to terminate when either 1. see opposing vertex a[DPLUS] in some */
 /* simplex or 2. have examined all simplices containing the new common */
 /* vertices derived from original simplex */
 /* so need to flag simplices that have been examined */

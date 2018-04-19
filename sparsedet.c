@@ -20,7 +20,7 @@ void sparsedet(void){
     SuperLUStat_t stat;
 
     SCformat *Lstore;
-    double *Lval,**test,det,dot;
+    double *Lval,**test,det,dot, **unitary;
     double *diagU, *dblock;
     int fsupc, nsupr, nsupc, luptr;
     int i2, k2, nsupers,m,n,count,NNZ;
@@ -48,8 +48,8 @@ void sparsedet(void){
     c=ivector(0,NNZ-1);
     r=ivector(0,n);
     
-    tmp=vector(0,Z*NNZ-1);
-    jtmp=ivector(0,Z*NNZ-1);
+    tmp=vector(0,Z1*NNZ-1);
+    jtmp=ivector(0,Z1*NNZ-1);
     itmp=ivector(0,n);
 
     
@@ -136,20 +136,48 @@ void sparsedet(void){
         for(int j=ilap[i];j<ilap[i+1];j++){
             if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
     
-    free_vector(tmp,0,Z*NNZ-1);
-    free_ivector(jtmp,0,Z*NNZ-1);
+    free_vector(tmp,0,Z1*NNZ-1);
+    free_ivector(jtmp,0,Z1*NNZ-1);
     free_ivector(itmp,0,n);
     
- /*   test=matrix(0,n-1,0,n-1);
+    test=matrix(0,n-1,0,n-1);
+    unitary=matrix(0,n-1,0,n-1);
+    
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
-            test[i][j]=0.0;}}
-    for(int i=0;i<n;i++){
-        for(int k=ilap[i];k<ilap[i+1];k++){
-            test[i][jlap[k]]=lap[k];
+            //test[i][j]=0.00;
+            unitary[i][j] = 2;
+            
         }
     }
-printf("reconstructed node laplacian\n");
+    
+    int co_k=0;
+    int co_i=0;
+    for(int i=0;i<n;i++){
+        for(int k=ilap[i];k<ilap[i+1];k++){
+        //for(int k=ilap[i];k<5;k++){
+            //(void)printf("i and k %d  %d \n",i, k);
+            //(void)printf("%lg ",test[i][k]);
+            test[i][jlap[k]]=lap[k];
+            co_k++;
+        }
+        //(void)printf("Number of non0 -- in %d\n",co);fflush(stdout);
+        co_i++;
+    }
+    printf("reconstructed node laplacian\n");
+    //(void)printf("Number of k --- in %d\n",co_k);fflush(stdout);
+    //(void)printf("Number of i --- in %d\n",co_i);fflush(stdout);
+    //(void)printf("Number of i feed in %d\n",nnz-num);fflush(stdout);
+    //(void)printf("Number of k feed in %d\n",nnz);fflush(stdout);
+    //(void)printf("Number of non0 in %d\n",co);fflush(stdout);
+    
+    
+    
+    find_det(test);
+    //find_det(unitary);
+    //(void)printf("LAPACK det is %lg\n\n",DET);
+    
+    /*
 for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
 (void)printf("%lg ",test[i][j]);}
@@ -247,6 +275,8 @@ if(info!=0){(void)printf("error in super LU\n");}
              det=det+log(fabs(diagU[i]));
          }
          (void)printf("super LU node det is %lg\n\n",det);
+    
+    // http://oomph-lib.maths.man.ac.uk/doc/the_data_structure/html/superlu_8c_source.html //
  
 	/* Free un-wanted storage */
 SUPERLU_FREE(diagU);
@@ -270,8 +300,8 @@ StatFree(&stat);
       c=ivector(0,NNZ-1);
       r=ivector(0,n);
     
-       tmp=vector(0,Z*NNZ-1);
-      jtmp=ivector(0,Z*NNZ-1);
+       tmp=vector(0,Z1*NNZ-1);
+      jtmp=ivector(0,Z1*NNZ-1);
        itmp=ivector(0,n);
     
     // build sparse incidence matrix ...
@@ -336,8 +366,8 @@ StatFree(&stat);
      for(int j=ilap[i];j<ilap[i+1];j++){
      if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
     
-     free_vector(tmp,0,Z*NNZ-1);
-     free_ivector(jtmp,0,Z*NNZ-1);
+     free_vector(tmp,0,Z1*NNZ-1);
+     free_ivector(jtmp,0,Z1*NNZ-1);
      free_ivector(itmp,0,n);
     
  /*   test=matrix(0,n-1,0,n-1);

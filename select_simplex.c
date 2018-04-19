@@ -1,6 +1,6 @@
 #include "grav.h"
 /* selects a simplex at random by accessing an array of pointers */
-/* once has a simplex select subsimplex/move at random */
+/* once has a simplex,  select subsimplex/move at random */
 
 PSIMPLEX select_simplex(int  *sub)
 {
@@ -21,11 +21,6 @@ if(grow==YES)
 else
 /* in general choose move type at random */
 *sub=(int)(my_random()*DPLUS); 
-
-/* debugging */
-/*if(drand48()<0.5) *sub=0;
-else
-*sub=D;*/
 
 try_subsimplex[*sub]++;
 

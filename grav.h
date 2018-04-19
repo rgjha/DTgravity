@@ -41,11 +41,11 @@
 #define BIGVOL (VOL*3)
 #define INCVOL MAXVOL
 
-#define Z 4
-#define NNZDm1 (Z*DPLUS*simplex_number)
-#define NNZDm2 (Z*DPLUS*simplex_number)
-#define NNZDm3 (Z*DPLUS*simplex_number)
-#define NNZDm4 (Z*DPLUS*simplex_number)
+#define Z1 4
+#define NNZDm1 (Z1*DPLUS*simplex_number)
+#define NNZDm2 (Z1*DPLUS*simplex_number)
+#define NNZDm3 (Z1*DPLUS*simplex_number)
+#define NNZDm4 (Z1*DPLUS*simplex_number)
 
 /********* Now some structure declarations *********/
 
@@ -79,6 +79,7 @@ extern int vertex_io[INCVOL][DPLUS],neighbour_io[INCVOL][DPLUS],stack_io[VOL];
 /* run parameters */
 
 extern int THERMALISE;
+extern int *ipiv; 
 extern int SWEEPS;
 extern int BLOCK;
 extern int GAP,TUNE_COUPLING,READIN,SEED,START_DUMP;
@@ -112,6 +113,7 @@ extern double **K,**KTRANS;
 extern double **L,**LTRANS;
 extern double *sI,*sJ,*sK,*sL;
 extern int *rowI,*rowJ,*rowK,*rowL,*colI,*colJ,*colK,*colL;
+extern double **Q, **OUT; 
 
 extern int DminusOneNumber,DminusTwoNumber,DminusThreeNumber,DminusFourNumber;
 extern double MASS;
@@ -262,6 +264,12 @@ void singular_vertex(void);
 extern void dgetrf_(int *, int *, double A[], int*, int ip[], int*);
 
 double calcdet(double **, int a);
+
+
+// ***********************************************
+double find_det(double **Q);
+void dgetrf(int *N1, int *N2, double *store, int *lda, int *ipiv, int *stat);
+// ***********************************************
 
 void ludcmp(double **, int a, int*, double *);
 
