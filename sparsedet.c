@@ -1,10 +1,3 @@
-//
-//  sparsedet.c
-//  
-//
-//
-//
-
 #include "grav.h"
 
 #include "slu_ddefs.h"
@@ -35,9 +28,8 @@ void sparsedet(void){
         first_time=0;
     }
 
-    (void)printf("In sparse det\n");
-    (void)printf("node number %d\n",node_number);
-    (void)printf("simplex_number %d\n",simplex_number);
+    (void)printf("Node number %d\n",node_number);
+    (void)printf("Simplex_number %d\n",simplex_number);
     n=node_number;
     m=n;
     if(D==2) NNZ=NNZDm2;
@@ -52,8 +44,6 @@ void sparsedet(void){
     jtmp=ivector(0,Z1*NNZ-1);
     itmp=ivector(0,n);
 
-    
-//    (void)printf("building sparse node incidence matrix \n");fflush(stdout);
     if(D==4){
     r[0]=0;num=0;
     for(int i=0;i<n;i++){
@@ -83,11 +73,9 @@ void sparsedet(void){
             
         }}
 
+    (void)printf("Number of nonzeroes found in node incidence matrix %d\n",num);fflush(stdout);
     
-    (void)printf("number of nonzeroes found in node incidence matrix %d\n",num);fflush(stdout);
-    
-   
-    // multiply sparse d and d^T
+    // Multiply sparse d and d^T
     nnz=0;
     dot=0.0; count=0;
     itmp[0]=0;
@@ -115,12 +103,12 @@ void sparsedet(void){
     
     (void)printf("Number of nonzeroes in sparse node laplacian %d\n",nnz);fflush(stdout);
    
-    // remalloc with exactly correct number of nonzeroes
+    // Re-malloc with exactly correct number of nonzeroes
     lap=vector(0,nnz-1);
     jlap=ivector(0,nnz-1);
     ilap=ivector(0,n);
     
-    // free sparse structures
+    // Free sparse structures
     
     free_vector(spi,0,NNZ-1);
     free_ivector(c,0,NNZ-1);
@@ -131,7 +119,8 @@ void sparsedet(void){
     for(int i=0;i<nnz;i++){
         lap[i]=tmp[i];
         jlap[i]=jtmp[i];}
-    // add in mass term
+
+    // Add mass term
     for(int i=0;i<n;i++){
         for(int j=ilap[i];j<ilap[i+1];j++){
             if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
@@ -140,53 +129,18 @@ void sparsedet(void){
     free_ivector(jtmp,0,Z1*NNZ-1);
     free_ivector(itmp,0,n);
     
-    test=matrix(0,n-1,0,n-1);
-    unitary=matrix(0,n-1,0,n-1);
     
+    test=matrix(0,n-1,0,n-1);
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
-            //test[i][j]=0.00;
-            unitary[i][j] = 2;
-            
-        }
-    }
-    
-    int co_k=0;
-    int co_i=0;
+            test[i][j]=0.0;}}
     for(int i=0;i<n;i++){
         for(int k=ilap[i];k<ilap[i+1];k++){
-        //for(int k=ilap[i];k<5;k++){
-            //(void)printf("i and k %d  %d \n",i, k);
-            //(void)printf("%lg ",test[i][k]);
             test[i][jlap[k]]=lap[k];
-            co_k++;
         }
-        //(void)printf("Number of non0 -- in %d\n",co);fflush(stdout);
-        co_i++;
     }
-    printf("reconstructed node laplacian\n");
-    //(void)printf("Number of k --- in %d\n",co_k);fflush(stdout);
-    //(void)printf("Number of i --- in %d\n",co_i);fflush(stdout);
-    //(void)printf("Number of i feed in %d\n",nnz-num);fflush(stdout);
-    //(void)printf("Number of k feed in %d\n",nnz);fflush(stdout);
-    //(void)printf("Number of non0 in %d\n",co);fflush(stdout);
-    
-    
-    
-    find_det(test);
-    //find_det(unitary);
-    //(void)printf("LAPACK det is %lg\n\n",DET);
-    
-    /*
-for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-(void)printf("%lg ",test[i][j]);}
-        (void)printf("\n");
-    }
+    printf("Reconstructed node Laplacian\n");
 
-    free_matrix(test,0,n-1,0,n-1);
-  */
-  
 dCreate_CompCol_Matrix(&A,n,n,nnz,lap,jlap,ilap,SLU_NC,SLU_D,SLU_GE);
 nrhs = 1;
 
@@ -197,27 +151,13 @@ if ( !(perm_r = intMalloc(n)) ) ABORT("Malloc fails for perm_r[].");
 if ( !(perm_c = intMalloc(n)) ) ABORT("Malloc fails for perm_c[].");
 
 set_default_options(&options);
-//options.ColPerm = NATURAL;
 options.SymmetricMode = YES;
 StatInit(&stat);
 dgssv(&options, &A, perm_c, perm_r, &LO, &U, &B, &stat, &info);
 
 if(info!=0){(void)printf("error in super LU\n");}
 
-//dPrint_Dense_Matrix("L", &LO);
-    
-//dPrint_CompCol_Matrix("A", &A);
-//dPrint_CompCol_Matrix("U", &U);
-//(void)printf("solution\n");
-//for(int i=0;i<m;i++){
-//(void)printf("sol[%d]=%lg ",i,rhs[i]);}
-//(void)printf("\n");
-
-//dPrint_SuperNode_Matrix("L", &LO);
-//print_int_vec("\nperm_r", m, perm_r);
-
-
-// check solution
+// Check solution
     if(DEBUG){double *b;
   int i;
   int j;
@@ -238,11 +178,6 @@ if(info!=0){(void)printf("error in super LU\n");}
     }
   }
     }
-    
- // for(i=0;i<m;i++){
- // (void)printf("Ax[%d]=%lg ",i,b[i]);}
-
-//(void)printf("\n");
 
     det=0.0;
     Lstore = (SCformat *)LO.Store;
@@ -253,7 +188,6 @@ if(info!=0){(void)printf("error in super LU\n");}
         //Allocate store for the entries
         if ( !(diagU = SUPERLU_MALLOC( m * sizeof(SuperMatrix) )) )
          ABORT("Malloc fails for diagU[].");
-        //Loop over the number of super diagonal terms(?)
         for(k2=0; k2< nsupers; ++k2)
          {
           fsupc = L_FST_SUPC(k2);
@@ -269,15 +203,18 @@ if(info!=0){(void)printf("error in super LU\n");}
            }
          }
                   
-        //Now multiply all the diagonal terms together to get the determinant
+        //Now multiply the diagonal terms to get the determinant
+        //http://oomph-lib.maths.man.ac.uk/doc/the_data_structure/html/superlu_8c_source.html //
          for(int i=0;i<n;i++){
-            // (void)printf("diagU[%d] is %lg\n",i,diagU[i]);
-             det=det+log(fabs(diagU[i]));
+         det=det+log(fabs(diagU[i]));
          }
-         (void)printf("super LU node det is %lg\n\n",det);
     
-    // http://oomph-lib.maths.man.ac.uk/doc/the_data_structure/html/superlu_8c_source.html //
- 
+    printf("------------------------------------ \n");
+    (void)printf("super LU node det is %lg\n",det);
+    double DETERM = find_det(test,node_number);
+    printf("LAPACK node det is %.8g \n", DETERM);
+    printf("------------------------------------ \n");
+    
 	/* Free un-wanted storage */
 SUPERLU_FREE(diagU);
 SUPERLU_FREE (rhs);
@@ -293,6 +230,10 @@ StatFree(&stat);
     
     (void)fprintf(f,"%lg ",det);
     
+    
+    
+    // Now construct Laplacian for simplex
+    
       n=simplex_number;
       m=n;
       NNZ=Dm1num;
@@ -300,24 +241,21 @@ StatFree(&stat);
       c=ivector(0,NNZ-1);
       r=ivector(0,n);
     
-       tmp=vector(0,Z1*NNZ-1);
+      tmp=vector(0,Z1*NNZ-1);
       jtmp=ivector(0,Z1*NNZ-1);
-       itmp=ivector(0,n);
+      itmp=ivector(0,n);
     
-    // build sparse incidence matrix ...
-//      (void)printf("building sparse simplex incidence matrix \n");fflush(stdout);
      r[0]=0;num=0;
      for(int i=0;i<n;i++){
      for(int k=0;k<NNZ;k++){
      if(rowI[k]==i) {c[num]=colI[k];spi[num]=sI[k];num++;}
      }
      r[i+1]=num;
-     //(void)printf("i=%d r[%d]=%d\n",i,i+1,num);
      }
     
-(void)printf("number of nonzeroes found in simplex incidence matrix %d\n",num);fflush(stdout);
+    (void)printf("Number of nonzeroes found in simplex incidence matrix %d\n",num);fflush(stdout);
     
-    // multiply sparse d and d^T
+    // Multiply sparse d and d^T
      nnz=0;
      dot=0.0;count=0;
      itmp[0]=0;
@@ -343,14 +281,14 @@ StatFree(&stat);
      
      }
     
-     (void)printf("Number of nonzeroes in sparse simplex laplacian %d\n",nnz);fflush(stdout);
+     (void)printf("Number of nonzeroes in sparse Simplex Laplacian %d\n",nnz);fflush(stdout);
     
     // remalloc with exactly correct number of nonzeroes
      lap=vector(0,nnz-1);
      jlap=ivector(0,nnz-1);
      ilap=ivector(0,n);
      
-     // free sparse structures
+     // Free sparse structures
      
      free_vector(spi,0,NNZ-1);
      free_ivector(c,0,NNZ-1);
@@ -361,7 +299,8 @@ StatFree(&stat);
      for(int i=0;i<nnz;i++){
      lap[i]=tmp[i];
      jlap[i]=jtmp[i];}
-     // add in mass term
+    
+    
      for(int i=0;i<n;i++){
      for(int j=ilap[i];j<ilap[i+1];j++){
      if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
@@ -370,16 +309,19 @@ StatFree(&stat);
      free_ivector(jtmp,0,Z1*NNZ-1);
      free_ivector(itmp,0,n);
     
- /*   test=matrix(0,n-1,0,n-1);
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
+    test=matrix(0,m-1,0,m-1);
+    for(int i=0;i<m;i++){
+        for(int j=0;j<m;j++){
             test[i][j]=0.0;}}
-    for(int i=0;i<n;i++){
+    for(int i=0;i<m;i++){
         for(int k=ilap[i];k<ilap[i+1];k++){
             test[i][jlap[k]]=lap[k];
         }
     }
-    printf("reconstructed simplex laplacian\n");
+    printf("Reconstructed simplex Laplacian\n");
+    
+  
+  /*
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
             (void)printf("%lg ",test[i][j]);}
@@ -404,26 +346,12 @@ StatFree(&stat);
     dgssv(&options, &A, perm_c, perm_r, &LO, &U, &B, &stat, &info);
     
     if(info!=0){(void)printf("error in super LU\n");}
-    
-    //dPrint_Dense_Matrix("L", &LO);
-    
-    //dPrint_CompCol_Matrix("A", &A);
-    //dPrint_CompCol_Matrix("U", &U);
-    //(void)printf("solution\n");
-    //for(int i=0;i<m;i++){
-    //(void)printf("sol[%d]=%lg ",i,rhs[i]);}
-    //(void)printf("\n");
-    
-    //dPrint_SuperNode_Matrix("L", &LO);
-    //print_int_vec("\nperm_r", m, perm_r);
-    
-    
-    // check solution
+
+    // Check solution
     if(DEBUG){double *b;
         int i;
         int j;
         int k;
-        
         
         b = vector(0,m-1);
         for ( i = 0; i < m; i++ )
@@ -476,7 +404,12 @@ StatFree(&stat);
         // (void)printf("diagU[%d] is %lg\n",i,diagU[i]);
         det=det+log(fabs(diagU[i]));
     }
-    (void)printf("super LU simplex det is %lg\n\n",det);
+    
+    printf("------------------------------------ \n");
+    (void)printf("super LU simplex det is %lg\n",det);
+    DETERM = find_det(test, simplex_number);
+    printf("LAPACK simplex det is %.8g \n", DETERM);
+    printf("------------------------------------ \n");
     
     /* Free un-wanted storage */
     SUPERLU_FREE(diagU);
@@ -495,7 +428,4 @@ StatFree(&stat);
 
     fflush(f);
 
-
-    
-    
 }

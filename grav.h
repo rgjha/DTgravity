@@ -267,7 +267,7 @@ double calcdet(double **, int a);
 
 
 // ***********************************************
-double find_det(double **Q);
+double find_det(double **Q, int m);
 void dgetrf(int *N1, int *N2, double *store, int *lda, int *ipiv, int *stat);
 // ***********************************************
 
