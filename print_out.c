@@ -26,8 +26,9 @@ printf("\nAverage mean distance %lg ",average_distance);
 printf("\nAverage maximum pointer number %ld ",max_point);
 printf("\nAverage number of simplices in manifold check %lg ",manifold_check);
 printf("\nFinal kappa_d %lg ", kappa_d+tmp);
-printf("\n ");
+//printf("\n ");
 
+/* 
 printf("\nSubsimplex Moves ");
 for(i=0;i<DPLUS;i++)
 {
@@ -38,6 +39,7 @@ printf("\nNumber that pass manifold test %ld ",manifold_subsimplex[i]);
 printf("\nNumber that pass Metropolis test %ld ",go_subsimplex[i]);
 printf("\n ");
 }
+*/ 
 
 
 fflush(stdout);

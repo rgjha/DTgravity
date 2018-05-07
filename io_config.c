@@ -37,6 +37,7 @@ temp2=temp2->next;
 if(stack_count!=i){printf("\nWrong number on stack ");exit(1);}
 
 fprintf(fp3,"%d %d %d\n",simplex_number,node_number,stack_count);
+
 fprintf(fp3,"%lg %lg %lg\n",kappa_0,kappa_d,BETA);
 
 for(j=0;j<stack_count;j++)

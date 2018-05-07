@@ -1,6 +1,6 @@
-0.0 0.0 0.01
-1 4 1 200 0 1000 1155555 0
+0.1 0.0 0.1
+2 20 2 200 0 1000 1155555 0
 
 
-vertex coupling, order coupling, fermion mass
+kappa0(vertex coupling), order coupling, measure coupling(beta), fermion mass
 thermalise, sweeps, gap, tune_coupling, readin, block, seed, dump_start

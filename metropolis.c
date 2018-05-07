@@ -19,12 +19,14 @@ else
 
 ds0=0.0;
 
-dsd=kappa_d*(2*sub-D);
+dsd=kappa_d*(2*sub-D);  // kappa_d * (2i - d)  // Equation (10) 
 
 /* add restoring force to VOL */
 dsd=dsd+(2*sub-D)*((2*sub-D)+2*(simplex_number-growing_vol))/(1.0*DV*DV);
 
-dsd=dsd-ds0;
+// 
+
+dsd=dsd-ds0;  // 
 
 /* node order term */
 
@@ -64,7 +66,7 @@ dsd=exp(dsd);
 
 dsd=(1.0+(double)(2*sub-D)/(double)simplex_number)*dsd;
 
-dsd=1.0/(1.0+dsd);
+dsd=1.0/(1.0+dsd);  // Equation (9)
 
 dummy=my_random()-dsd;
 

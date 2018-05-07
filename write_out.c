@@ -1,5 +1,5 @@
 #include "grav.h"
-/* routine packs simplices into regular arrays and outputs config */
+/* Routine packs simplices into regular arrays and outputs config */
 
 void write_out(void)
 {

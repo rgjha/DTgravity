@@ -6,11 +6,11 @@ void header(void)
 {
 long int seedval;
 
-fp6=fopen("dspec","a");
-fp5=fopen("dlen","a");
 fp2=fopen("action","a");
-fp4=fopen("len","a");
 fp3=fopen("spec","a");
+fp4=fopen("len","a");
+fp5=fopen("dlen","a");
+fp6=fopen("dspec","a");
 
 seedval=SEED;
 srand48(seedval);
@@ -20,7 +20,7 @@ max_point=0;
 printf("\nDimension %d ",D);
 printf("\nVolume %d ",VOL);
 printf("\nNode coupling %g ",kappa_0);
-printf("\nSimplex coupling %g ",kappa_d);
+printf("\nSimplex coupling %g ",kappa_d);  // not an input !! 
 printf("\nMeasure coupling %g ",BETA);
 printf("\nFermion mass %g ", MASS);
 printf("\nNumber of sweeps %d ",SWEEPS);

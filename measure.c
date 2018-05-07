@@ -32,7 +32,6 @@ calls=0;
 
 orient();
 
-//testorient();
 
 kdoperator();
 

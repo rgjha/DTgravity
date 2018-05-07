@@ -4,6 +4,7 @@
 // Compute determinant of the Q matrix through LAPACK.
 // Matches with Simon's calculation using SuperLU.
 // Call is made through sparsedet.c as --> find_det(test, #) ;
+// However, for VOL > 10000, much slower than SuperLU. 
 
 double find_det(double **Q, int j) {
 int row, col, stat = 0;
@@ -19,10 +20,16 @@ int p;
 for (row = 0; row < n; row++) {
 for (col = 0; col < n; col++) {
 p = (col*n + row);
+
+store[p]= 0 ; 
+
+if (Q[row][col] != 0){
 store[p] = Q[row][col]; 
+
 }
 }
-     
+}
+    
 dgetrf(&n, &n, store, &n, ipiv, &stat);
 // https://github.com/Reference-LAPACK/lapack/blob/master/SRC/dgetrf.f
 // store has input & output 

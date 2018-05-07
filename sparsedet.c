@@ -1,7 +1,5 @@
 #include "grav.h"
-
 #include "slu_ddefs.h"
-
 void sparsedet(void){
 
     SuperMatrix A,B;
@@ -21,7 +19,7 @@ void sparsedet(void){
     static FILE *f;
     static int first_time=1;
     int *r,*c,*ilap,*jlap,num,*jtmp,*itmp;
-    double *spi,*lap,*tmp;
+    double *spi,*lap,*tmp, *q;
 
     if(first_time){
         f=fopen("det","a");
@@ -44,15 +42,21 @@ void sparsedet(void){
     jtmp=ivector(0,Z1*NNZ-1);
     itmp=ivector(0,n);
 
-    if(D==4){
+  if(D==4){
+    
     r[0]=0;num=0;
     for(int i=0;i<n;i++){
         for(int k=0;k<Dm4num;k++){
-            if(colL[k]==i) {c[num]=rowL[k];spi[num]=sL[k];num++;}
+            if(colL[k]==i) {
+            c[num]=rowL[k];
+            spi[num]=sL[k];
+            num++;
+            }
         }
         r[i+1]=num;
+    }
+  }
 
-    }}
     if(D==3){
         r[0]=0;num=0;
         for(int i=0;i<n;i++){
@@ -89,9 +93,9 @@ void sparsedet(void){
                     if(c[k]==c[l]){
                         dot+=spi[k]*spi[l];
                         count++;}}}
-            
+
             if(count!=0){
-                tmp[nnz]=dot;
+                tmp[nnz]=dot ;
                 jtmp[nnz]=j;
                 nnz++;
             }
@@ -100,7 +104,6 @@ void sparsedet(void){
         itmp[i+1]=nnz;
         
     }
-    
     (void)printf("Number of nonzeroes in sparse node laplacian %d\n",nnz);fflush(stdout);
    
     // Re-malloc with exactly correct number of nonzeroes
@@ -115,31 +118,58 @@ void sparsedet(void){
     free_ivector(r,0,n);
     
     for(int i=0;i<=n;i++){
-        ilap[i]=itmp[i];}
+        ilap[i]=itmp[i];}  // How many non-zeros 
     for(int i=0;i<nnz;i++){
-        lap[i]=tmp[i];
-        jlap[i]=jtmp[i];}
+        lap[i]=tmp[i];  // Value 
+        jlap[i]=jtmp[i];}  // Index of zeros 
 
     // Add mass term
+    double temp = 0.0; 
     for(int i=0;i<n;i++){
-        for(int j=ilap[i];j<ilap[i+1];j++){
-            if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
-    
+      for(int j=ilap[i];j<ilap[i+1];j++){
+
+        if(jlap[j]==i){
+        lap[j]=lap[j] + MASS*MASS ; 
+	//(void)printf("DIAGONAL IS  is %lg\n",lap[j] );
+        temp=temp+log(fabs(lap[j]));
+
+        }
+      }
+    }
+
+
+    (void)printf("log of product of diags for NODE is %lg\n", temp );
     free_vector(tmp,0,Z1*NNZ-1);
     free_ivector(jtmp,0,Z1*NNZ-1);
     free_ivector(itmp,0,n);
     
-    
     test=matrix(0,n-1,0,n-1);
     for(int i=0;i<n;i++){
         for(int j=0;j<n;j++){
-            test[i][j]=0.0;}}
+            test[i][j]=0.0;}}  // Zero all 
     for(int i=0;i<n;i++){
-        for(int k=ilap[i];k<ilap[i+1];k++){
+        for(int k=ilap[i];k<ilap[i+1];k++){  // All non-zeros 
             test[i][jlap[k]]=lap[k];
         }
     }
     printf("Reconstructed node Laplacian\n");
+
+
+    // now factorize laplacian
+    q=vector(0,n-1);
+    
+    for(int i=0;i<n;i++){
+        for(int j=ilap[i];j<ilap[i+1];j++){
+            if(jlap[j]==i) {
+              q[i]=lap[j];
+            }
+        }}
+    for(int i=0;i<n;i++){
+        for(int j=ilap[i];j<ilap[i+1];j++){
+           lap[j]=lap[j]/sqrt(q[i]*q[jlap[j]]);
+        }}
+
+
 
 dCreate_CompCol_Matrix(&A,n,n,nnz,lap,jlap,ilap,SLU_NC,SLU_D,SLU_GE);
 nrhs = 1;
@@ -163,7 +193,6 @@ if(info!=0){(void)printf("Error in super LU\n");}
   int j;
   int k;
  
-
   b = vector(0,m-1);
   for ( i = 0; i < m; i++ )
   {
@@ -212,7 +241,7 @@ if(info!=0){(void)printf("Error in super LU\n");}
     printf("------------------------------------ \n");
     (void)printf("Super LU node det is %lg\n",det);
     double DETERM = find_det(test,node_number);
-    printf("LAPACK node det is %.8g \n", DETERM);
+    printf("LAPACK node det is %.6g \n", DETERM);
     printf("------------------------------------ \n");
     
 	/* Free un-wanted storage */
@@ -299,9 +328,16 @@ StatFree(&stat);
      jlap[i]=jtmp[i];}
     
     
+
      for(int i=0;i<n;i++){
-     for(int j=ilap[i];j<ilap[i+1];j++){
-     if(jlap[j]==i){lap[j]=lap[j]+MASS*MASS;}}}
+      
+      for(int j=ilap[i];j<ilap[i+1];j++){
+      
+        if(jlap[j]==i){
+        lap[j]=lap[j]+ MASS*MASS;
+        }
+      }
+    }
     
      free_vector(tmp,0,Z1*NNZ-1);
      free_ivector(jtmp,0,Z1*NNZ-1);
@@ -356,7 +392,7 @@ StatFree(&stat);
     }
     
     det=0.0;
-    
+  
     Lstore = (SCformat *)LO.Store;
     Lval = (double *)Lstore->nzval;
     nsupers = Lstore->nsuper + 1;
@@ -386,7 +422,7 @@ StatFree(&stat);
     printf("------------------------------------ \n");
     (void)printf("super LU simplex det is %lg\n",det);
     DETERM = find_det(test, simplex_number);
-    printf("LAPACK simplex det is %.8g \n", DETERM);
+    printf("LAPACK simplex det is %.6g \n", DETERM);
     printf("------------------------------------ \n");
     
     /* Free storage */
@@ -403,5 +439,4 @@ StatFree(&stat);
     
     (void)fprintf(f,"%lg\n",det);
     fflush(f);
-
 }
